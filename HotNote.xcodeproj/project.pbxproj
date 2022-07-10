@@ -9,23 +9,35 @@
 /* Begin PBXBuildFile section */
 		0C27C195287444A700A7366F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C27C194287444A700A7366F /* AppDelegate.swift */; };
 		0C27C197287444A700A7366F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C27C196287444A700A7366F /* SceneDelegate.swift */; };
-		0C27C199287444A700A7366F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C27C198287444A700A7366F /* ViewController.swift */; };
+		0C27C199287444A700A7366F /* NoteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C27C198287444A700A7366F /* NoteController.swift */; };
 		0C27C19C287444A700A7366F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C27C19A287444A700A7366F /* Main.storyboard */; };
 		0C27C19F287444A700A7366F /* HotNote.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 0C27C19D287444A700A7366F /* HotNote.xcdatamodeld */; };
 		0C27C1A1287444A900A7366F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0C27C1A0287444A900A7366F /* Assets.xcassets */; };
 		0C27C1A4287444A900A7366F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0C27C1A2287444A900A7366F /* LaunchScreen.storyboard */; };
+		0C27C1B52875B39D00A7366F /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C27C1B42875B39D00A7366F /* Date.swift */; };
+		0C27C1B82875B67700A7366F /* Note+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C27C1B62875B67700A7366F /* Note+CoreDataClass.swift */; };
+		0C27C1B92875B67700A7366F /* Note+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C27C1B72875B67700A7366F /* Note+CoreDataProperties.swift */; };
+		0C27C1BB2875B91700A7366F /* NoteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C27C1BA2875B91700A7366F /* NoteTableViewCell.swift */; };
+		0C27C1BF2875CBB700A7366F /* EditNoteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C27C1BE2875CBB700A7366F /* EditNoteController.swift */; };
+		0C9A042328787930006D5F11 /* CoreDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9A042228787930006D5F11 /* CoreDataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		0C27C191287444A700A7366F /* HotNote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HotNote.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0C27C194287444A700A7366F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0C27C196287444A700A7366F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		0C27C198287444A700A7366F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		0C27C198287444A700A7366F /* NoteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteController.swift; sourceTree = "<group>"; };
 		0C27C19B287444A700A7366F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		0C27C19E287444A700A7366F /* HotNote.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = HotNote.xcdatamodel; sourceTree = "<group>"; };
 		0C27C1A0287444A900A7366F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0C27C1A3287444A900A7366F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0C27C1A5287444A900A7366F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0C27C1B42875B39D00A7366F /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		0C27C1B62875B67700A7366F /* Note+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Note+CoreDataClass.swift"; sourceTree = "<group>"; };
+		0C27C1B72875B67700A7366F /* Note+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Note+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		0C27C1BA2875B91700A7366F /* NoteTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTableViewCell.swift; sourceTree = "<group>"; };
+		0C27C1BE2875CBB700A7366F /* EditNoteController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditNoteController.swift; sourceTree = "<group>"; };
+		0C9A042228787930006D5F11 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,16 +70,62 @@
 		0C27C193287444A700A7366F /* HotNote */ = {
 			isa = PBXGroup;
 			children = (
-				0C27C194287444A700A7366F /* AppDelegate.swift */,
-				0C27C196287444A700A7366F /* SceneDelegate.swift */,
-				0C27C198287444A700A7366F /* ViewController.swift */,
-				0C27C19A287444A700A7366F /* Main.storyboard */,
-				0C27C1A0287444A900A7366F /* Assets.xcassets */,
-				0C27C1A2287444A900A7366F /* LaunchScreen.storyboard */,
-				0C27C1A5287444A900A7366F /* Info.plist */,
-				0C27C19D287444A700A7366F /* HotNote.xcdatamodeld */,
+				0C27C1B32875B0EF00A7366F /* Applications */,
+				0C27C1B22875B0CB00A7366F /* Resources */,
+				0C27C1B12875B00B00A7366F /* Models */,
+				0C6B8692287B320D002E7D5E /* Controllers */,
+				0C6B8693287B3268002E7D5E /* Main */,
 			);
 			path = HotNote;
+			sourceTree = "<group>";
+		};
+		0C27C1B12875B00B00A7366F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0C27C19D287444A700A7366F /* HotNote.xcdatamodeld */,
+				0C27C1B62875B67700A7366F /* Note+CoreDataClass.swift */,
+				0C27C1B72875B67700A7366F /* Note+CoreDataProperties.swift */,
+				0C27C1B42875B39D00A7366F /* Date.swift */,
+				0C9A042228787930006D5F11 /* CoreDataManager.swift */,
+				0C27C1BA2875B91700A7366F /* NoteTableViewCell.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0C27C1B22875B0CB00A7366F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				0C27C1A0287444A900A7366F /* Assets.xcassets */,
+				0C27C1A5287444A900A7366F /* Info.plist */,
+				0C27C1A2287444A900A7366F /* LaunchScreen.storyboard */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		0C27C1B32875B0EF00A7366F /* Applications */ = {
+			isa = PBXGroup;
+			children = (
+				0C27C196287444A700A7366F /* SceneDelegate.swift */,
+				0C27C194287444A700A7366F /* AppDelegate.swift */,
+			);
+			path = Applications;
+			sourceTree = "<group>";
+		};
+		0C6B8692287B320D002E7D5E /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				0C27C1BE2875CBB700A7366F /* EditNoteController.swift */,
+				0C27C198287444A700A7366F /* NoteController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		0C6B8693287B3268002E7D5E /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				0C27C19A287444A700A7366F /* Main.storyboard */,
+			);
+			path = Main;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,10 +199,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0C27C199287444A700A7366F /* ViewController.swift in Sources */,
+				0C27C199287444A700A7366F /* NoteController.swift in Sources */,
 				0C27C19F287444A700A7366F /* HotNote.xcdatamodeld in Sources */,
 				0C27C195287444A700A7366F /* AppDelegate.swift in Sources */,
+				0C27C1BB2875B91700A7366F /* NoteTableViewCell.swift in Sources */,
+				0C27C1B52875B39D00A7366F /* Date.swift in Sources */,
+				0C27C1B82875B67700A7366F /* Note+CoreDataClass.swift in Sources */,
+				0C27C1BF2875CBB700A7366F /* EditNoteController.swift in Sources */,
 				0C27C197287444A700A7366F /* SceneDelegate.swift in Sources */,
+				0C27C1B92875B67700A7366F /* Note+CoreDataProperties.swift in Sources */,
+				0C9A042328787930006D5F11 /* CoreDataManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,7 +357,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RXCGR348Y5;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = HotNote/Info.plist;
+				INFOPLIST_FILE = HotNote/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -321,7 +385,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RXCGR348Y5;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = HotNote/Info.plist;
+				INFOPLIST_FILE = HotNote/Resources/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
