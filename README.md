@@ -1,2 +1,2 @@
-# HotNote
+# HotNote(Заметки)
 
