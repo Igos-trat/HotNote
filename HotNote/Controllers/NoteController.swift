@@ -28,8 +28,11 @@ class NoteController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationController?.navigationBar.barStyle = .black
         navigationItem.backButtonTitle = "Назад"
-        self.navigationController?.navigationBar.shadowImage = UIImage()
+        //self.navigationController?.navigationBar.shadowImage = UIImage()
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = "Заметки"
         tableView.contentInset = .init(top: 0, left: 0, bottom: 30, right: 0)
         configureSearchBar()
         fetchNotesFromStorage()
@@ -43,10 +46,16 @@ class NoteController: UIViewController {
     private func configureSearchBar() {
         navigationItem.searchController = searchController
         searchController.searchBar.placeholder = "Поиск"
-        searchController.searchBar.showsCancelButton = false
+        searchController.searchBar.showsCancelButton = true
         searchController.obscuresBackgroundDuringPresentation = false
         searchController.searchBar.delegate = self
         searchController.delegate = self
+        searchController.searchBar.sizeToFit()
+        
+        if let cancelButton = searchController.searchBar.value(forKey: "cancelButton") as? UIButton {
+            cancelButton.setTitle("Отмена", for: .normal)
+            
+        }
     }
 
     @IBAction func createNewNote(_ sender: UIButton) {
@@ -63,7 +72,6 @@ class NoteController: UIViewController {
     // MARK: - Methods
     private func createNote() -> Note {
         let note = CoreDataManager.shared.createNote()
-        
         
         allNotes.insert(note, at: 0)
         tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
@@ -123,6 +131,7 @@ extension NoteController: UISearchControllerDelegate, UISearchBarDelegate {
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        navigationItem.titleView = nil
         search("")
     }
     
@@ -134,7 +143,7 @@ extension NoteController: UISearchControllerDelegate, UISearchBarDelegate {
     func search(_ query: String) {
         if query.count >= 1 {
             filteredNotes = allNotes.filter { $0.text.lowercased().contains(query.lowercased()) }
-        } else{
+        } else {
             filteredNotes = allNotes
         }
         

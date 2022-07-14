@@ -13,12 +13,12 @@ import CoreData
 public class Note: NSManagedObject {
     
     var title: String {
-        return text.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: .newlines).first ?? "" //возвращ. первую строку
+        return text.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: .newlines).first ?? "" // возвращ. первую строку
     }
     
     var desc: String {
         var lines = text.trimmingCharacters(in: .whitespacesAndNewlines).components(separatedBy: .newlines)
         lines.removeFirst()
-        return "\(lastUpdated.format()) \(lines.first ?? "")" //возвр. 2 строку
+        return "\(lastUpdated.format()) \(lines.first ?? "")" // возвр. 2 строку
     }
 }

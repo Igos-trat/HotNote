@@ -10,7 +10,6 @@ import UIKit
 class NoteTableViewCell: UITableViewCell {
 
     static let identifier = "NoteTableViewCell"
-    
    
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var descriptLabel: UILabel!
@@ -20,4 +19,3 @@ class NoteTableViewCell: UITableViewCell {
         descriptLabel.text = note.desc
     }
 }
-

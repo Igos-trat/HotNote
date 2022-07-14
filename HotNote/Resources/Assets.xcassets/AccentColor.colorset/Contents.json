@@ -2,10 +2,19 @@
   "colors" : [
     {
       "idiom" : "universal"
+    },
+    {
+      "idiom" : "iphone"
+    },
+    {
+      "idiom" : "ipad"
     }
   ],
   "info" : {
     "author" : "xcode",
     "version" : 1
+  },
+  "properties" : {
+    "localizable" : true
   }
 }

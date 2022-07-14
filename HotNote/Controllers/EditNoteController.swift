@@ -16,12 +16,12 @@ class EditNoteController: UIViewController {
 
     @IBOutlet weak var textView: UITextView!
     
-    @IBOutlet weak var textViewTitle: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         textView.text = note?.text
+        textView.resignFirstResponder()
       
     }
     
@@ -57,31 +57,5 @@ extension EditNoteController: UITextViewDelegate {
             updateNote()
     }
 }
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
 }
