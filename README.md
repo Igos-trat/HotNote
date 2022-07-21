@@ -1,4 +1,5 @@
-<img width="120" alt="изображение" src="https://user-images.githubusercontent.com/100344157/179018107-da268146-7d02-49fd-b551-5088339572d9.png">
+<img width="128" alt="mac256" src="https://user-images.githubusercontent.com/100344157/180216680-bca0e6f3-2901-4201-b4f5-b68a5d1172e9.png">
+
 
 # HotNote(Заметки)
 ## 📌 Used:
