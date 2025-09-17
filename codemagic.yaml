@@ -1,17 +1,17 @@
 workflows:
   ios-workflow:
-    instance_type: mac_mini_m1
+    instance_type: mac_mini_m2
     name: iOS Workflow
     integrations:
-      app_store_connect: Phlp Jiseph
+      app_store_connect: Connect_HotNote
     environment:
       ios_signing:
         distribution_type: app_store
-        bundle_identifier: "com.PhlpJiseph.Films"
+        bundle_identifier: "com.PhlpJiseph.HotNote"
       vars:
         XCODE_PROJECT: "HotNote.xcodeproj"
         XCODE_SCHEME: "HotNote"
-        APP_STORE_APPLE_ID: "123456789"
+        APP_STORE_APPLE_ID: "6752669884"
       xcode: latest
     triggering:
       events:
