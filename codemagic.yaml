@@ -3,7 +3,7 @@ workflows:
     name: iOS Release
     environment:
       groups:
-        - app_store_credentials
+        - new
       vars:
         XCODE_PROJECT: "HotNote.xcodeproj"
         XCODE_SCHEME: "HotNote"
