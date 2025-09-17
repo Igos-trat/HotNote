@@ -1,16 +1,9 @@
 workflows:
-  ios-hotnote-release:
-    name: HotNote iOS Release
-    max_build_duration: 120
-    instance_type: mac_mini_m2
+  ios-release:
+    name: iOS Release
     environment:
-      ios_signing:
-        provisioning_profiles:
-          - 54645
-        certificates:
-          - 123
-        distribution_type: app_store # or: ad_hoc | development | enterprise
-        bundle_identifier: "com.PhlpJiseph.Films"
+      groups:
+        - app_store_credentials
       vars:
         XCODE_PROJECT: "HotNote.xcodeproj"
         XCODE_SCHEME: "HotNote"
@@ -20,38 +13,77 @@ workflows:
         APP_STORE_CONNECT_KEY_ID: "WBP2ND8WH6"
         APP_STORE_CONNECT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgK1Cgd7kcYlr03SDggSIdf++kFAk0GS67WNiVutpT3h6gCgYIKoZIzj0DAQehRANCAAS+QTxZxRTRFdg6XpqYdgBbQXKAWNg+LrEIN+lyfc92v57Gntj8yY6gfucGjHwA7+A3iTwgGdE5tMpaJuqhiQWD-----END PRIVATE KEY-----"
         TEAM_ID: "Y4JKCJ5SG3"
-      xcode: latest
-      cocoapods: default
     scripts:
-      - name: Set up provisioning profiles
-        script: xcode-project use-profiles
-      - name: Increment build number
-        script: | 
-          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" || echo 0)
-          agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
-      - name: Build ipa for distribution
-        script: | 
+      - name: Set up keychain and provisioning profiles
+        script: |
+          keychain initialize
+          
+          # Install App Store Connect private key
+          echo "$APP_STORE_CONNECT_PRIVATE_KEY" > /tmp/auth_key.p8
+          
+          # Install certificates
+          app-store-connect fetch-signing-files \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_ID" \
+            --private-key @file:/tmp/auth_key.p8 \
+            "$BUNDLE_ID" \
+            --type IOS_APP_STORE
+          
+          # Install provisioning profiles
+          xcode-project use-profiles
+          
+      - name: Install pods
+        script: |
+          cd "$CM_BUILD_DIR"
+          pod install
+          
+      - name: Build and archive
+        script: |
           xcode-project build-ipa \
             --project "$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
+            --scheme "$XCODE_SCHEME" \
+            --workspace "${XCODE_PROJECT%.xcodeproj}.xcworkspace"
     artifacts:
       - build/ios/ipa/*.ipa
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+      - /tmp/xcodebuild_logs/*.log
     publishing:
       app_store_connect:
-        api_key: $APP_STORE_CONNECT_PRIVATE_KEY
-        key_id: $APP_STORE_CONNECT_KEY_ID
-        issuer_id: $APP_STORE_CONNECT_ISSUER_ID
-        submit_to_testflight: true
-        expire_build_submitted_for_review: false
-        # Раскомментируйте и добавьте названия бета-групп при необходимости
-        # beta_groups:
-        #   - "Internal Testers"
-        #   - "External Testers"
-        submit_to_app_store: false
-      email:
-        recipients:
-          - your-email@example.com # ЗАМЕНИТЕ на ваш email
-        notify:
-          success: true
-          failure: true
+        # Авторизация в App Store Connect
+        auth:
+          issuer_id: $APP_STORE_CONNECT_ISSUER_ID
+          key_id: $APP_STORE_CONNECT_KEY_ID
+          private_key: $APP_STORE_CONNECT_PRIVATE_KEY
+        
+        # Настройки публикации
+        submit_to_app_store: true
+        beta_groups: 
+          - "Testers"
+        
+        # Информация о приложении
+        app_id: $APP_STORE_APPLE_ID
+        bundle_id: $BUNDLE_ID
+        
+        # Настройки билда
+        release_type: SAME_AS_VERSION
+        
+        # Email уведомления
+        notify_external_testers: true
+
+# Настройки триггеров
+triggering:
+  events:
+    - push
+    - tag
+    - pull_request
+  branch_patterns:
+    - pattern: main
+      include: true
+      source: true
+    - pattern: release/*
+      include: true
+      source: true
+
+# Настройки окружения
+environment:
+  xcode: 15.0 # Укажите нужную версию Xcode
+  cocoapods: default
