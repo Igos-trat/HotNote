@@ -14,11 +14,53 @@ workflows:
         XCODE_PROJECT: "HotNote.xcodeproj"
         XCODE_SCHEME: "HotNote"
         APP_STORE_APPLE_ID: 6752669884
-      xcode: latest
+        TEAM_ID: "Y4JKCJ5SG3"
+      xcode: 16.4
     scripts:
-      - name: Set up provisioning profiles settings on Xcode project
-        script: xcode-project use-profiles
-        
+      - name: Set up code signing
+        script: |
+          keychain initialize
+          
+          # Скачиваем и устанавливаем сертификаты и provisioning profiles
+          app-store-connect fetch-signing-files \
+            --issuer-id "$APP_STORE_CONNECT_ISSUER_ID" \
+            --key-id "$APP_STORE_CONNECT_KEY_ID" \
+            --private-key @file:/tmp/auth_key.p8 \
+            "$BUNDLE_ID" \
+            --type IOS_APP_STORE
+          
+          # Применяем provisioning profiles
+          xcode-project use-profiles
+          
+      - name: Configure Xcode project for manual signing
+        script: |
+          # Настраиваем ручное подписывание в проекте
+          xcode-project set-build-settings \
+            --project "$XCODE_PROJECT" \
+            --target "HotNote" \
+            --data "CODE_SIGN_STYLE=Manual" \
+            --data "DEVELOPMENT_TEAM=$TEAM_ID" \
+            --data "CODE_SIGN_IDENTITY=Apple Distribution" \
+            --data "PRODUCT_BUNDLE_IDENTIFIER=$BUNDLE_ID"
+            
+      - name: Find and set provisioning profile
+        script: |
+          # Находим UUID App Store provisioning profile
+          PROFILE_UUID=$(find ~/Library/MobileDevice/Provisioning\ Profiles -name "*.mobileprovision" -exec /usr/libexec/PlistBuddy -c "Print UUID" /dev/stdin {} \; -exec grep -l "App Store" {} \; | head -n 1)
+          
+          if [ -n "$PROFILE_UUID" ]; then
+            echo "Using provisioning profile: $PROFILE_UUID"
+            xcode-project set-build-settings \
+              --project "$XCODE_PROJECT" \
+              --target "HotNote" \
+              --data "PROVISIONING_PROFILE=$PROFILE_UUID" \
+              --data "PROVISIONING_PROFILE_SPECIFIER=$BUNDLE_ID App Store"
+          else
+            echo "Error: No App Store provisioning profile found"
+            find ~/Library/MobileDevice/Provisioning\ Profiles -name "*.mobileprovision" | head -5
+            exit 1
+          fi
+          
       - name: Increment build number
         script: | 
           cd $CM_BUILD_DIR
@@ -31,7 +73,6 @@ workflows:
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
       
     publishing:
@@ -47,6 +88,5 @@ workflows:
         auth: integration
         submit_to_testflight: true
         beta_groups:
-          - group name 1
-          - group name 2
+          - "Testers"  # Замените на реальное название группы
         submit_to_app_store: false
