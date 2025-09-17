@@ -4,9 +4,6 @@ workflows:
     max_build_duration: 120
     instance_type: mac_mini_m2
     environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: "com.PhlpJiseph.Films"
       vars:
         XCODE_PROJECT: "HotNote.xcodeproj"
         XCODE_SCHEME: "HotNote"
@@ -17,22 +14,69 @@ workflows:
         APP_STORE_CONNECT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgK1Cgd7kcYlr03SDggSIdf++kFAk0GS67WNiVutpT3h6gCgYIKoZIzj0DAQehRANCAAS+QTxZxRTRFdg6XpqYdgBbQXKAWNg+LrEIN+lyfc92v57Gntj8yY6gfucGjHwA7+A3iTwgGdE5tMpaJuqhiQWD-----END PRIVATE KEY-----"
         TEAM_ID: "Y4JKCJ5SG3"
       xcode: latest
-      cocoapods: default
+    triggering:
+      events:
+        - push
+      branch_patterns:
+        - pattern: 'release'
+          include: true
+          source: true
     scripts:
-      - name: Set up provisioning profiles
-        script: xcode-project use-profiles
+      - name: Setup manual code signing
+        script: |
+          # Устанавливаем правильный Bundle ID в Info.plist
+          /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $BUNDLE_ID" "HotNote/Info.plist"
+          
+          # Создаем exportOptions.plist для ручной подписи
+          cat > exportOptions.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>compileBitcode</key>
+              <true/>
+              <key>method</key>
+              <string>app-store</string>
+              <key>teamID</key>
+              <string>$TEAM_ID</string>
+              <key>uploadBitcode</key>
+              <true/>
+              <key>uploadSymbols</key>
+              <true/>
+          </dict>
+          </plist>
+          EOF
+
       - name: Increment build number
         script: | 
           LATEST_BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" || echo 0)
+          echo "Incrementing build number from $LATEST_BUILD_NUMBER to $(($LATEST_BUILD_NUMBER + 1))"
           agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
-      - name: Build ipa for distribution
-        script: | 
-          xcode-project build-ipa \
-            --project "$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME"
+
+      - name: Build and archive with manual signing
+        script: |
+          # Создаем архив с ручной подписью
+          xcodebuild archive \
+            -project "$XCODE_PROJECT" \
+            -scheme "$XCODE_SCHEME" \
+            -archivePath build/ios/xcarchive/HotNote.xcarchive \
+            -configuration Release \
+            CODE_SIGN_STYLE="Manual" \
+            DEVELOPMENT_TEAM="$TEAM_ID" \
+            PRODUCT_BUNDLE_IDENTIFIER="$BUNDLE_ID" \
+            CODE_SIGN_IDENTITY="Apple Distribution"
+
+      - name: Export IPA
+        script: |
+          # Экспортируем IPA
+          xcodebuild -exportArchive \
+            -archivePath build/ios/xcarchive/HotNote.xcarchive \
+            -exportOptionsPlist exportOptions.plist \
+            -exportPath build/ios/ipa \
+            -allowProvisioningUpdates
+
     artifacts:
       - build/ios/ipa/*.ipa
-      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
     publishing:
       app_store_connect:
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
@@ -40,10 +84,6 @@ workflows:
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
         expire_build_submitted_for_review: false
-        # Раскомментируйте и добавьте названия бета-групп при необходимости
-        # beta_groups:
-        #   - "Internal Testers"
-        #   - "External Testers"
         submit_to_app_store: false
       email:
         recipients:
