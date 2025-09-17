@@ -8,7 +8,7 @@ workflows:
         provisioning_profiles:
           - 54645
         certificates:
-          - 54645
+          - 123
         distribution_type: app_store # or: ad_hoc | development | enterprise
         bundle_identifier: "com.PhlpJiseph.Films"
       vars:
