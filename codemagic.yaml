@@ -3,7 +3,7 @@ workflows:
     instance_type: mac_mini_m1
     name: iOS Workflow
     integrations:
-      app_store_connect: [ЗДЕСЬ Я МЕНЯЮ имя подключения App Store]
+      app_store_connect: Phlp Jiseph
     environment:
       ios_signing:
         distribution_type: app_store
