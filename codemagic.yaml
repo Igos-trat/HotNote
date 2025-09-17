@@ -11,28 +11,29 @@ workflows:
         bundle_identifier: com.PhlpJiseph.HotNote
       vars:
         BUNDLE_ID: "com.PhlpJiseph.HotNote"
-        XCODE_PROJECT: "HotNote.xcodeproj" # Изменено с XCODE_WORKSPACE на XCODE_PROJECT
+        XCODE_PROJECT: "HotNote.xcodeproj"
         XCODE_SCHEME: "HotNote"
         APP_STORE_APPLE_ID: 6752669884
       xcode: latest
     scripts:
       - name: Set up provisioning profiles settings on Xcode project
         script: xcode-project use-profiles
+        
       - name: Increment build number
         script: | 
           cd $CM_BUILD_DIR
           LATEST_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID")
           agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
+          
       - name: Build ipa for distribution
-        script: | 
-          xcode-project build-ipa \
-            --project "$CM_BUILD_DIR/$XCODE_PROJECT" \ # Изменено на --project вместо --workspace
-            --scheme "$XCODE_SCHEME"
+        script: xcode-project build-ipa --project "$XCODE_PROJECT" --scheme "$XCODE_SCHEME"
+        
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.app
       - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
+      
     publishing:
       email:
         recipients:
@@ -41,14 +42,11 @@ workflows:
         notify:
           success: true
           failure: false
+          
       app_store_connect:
         auth: integration
-        # Configuration related to TestFlight (optional)
-        # Note: This action is performed during post-processing.
         submit_to_testflight: true
-        beta_groups: # Specify the names of beta tester groups that will get access to the build once it has passed beta review.
+        beta_groups:
           - group name 1
           - group name 2
-        # Configuration related to App Store (optional)
-        # Note: This action is performed during post-processing.
         submit_to_app_store: false
