@@ -4,8 +4,8 @@ workflows:
     instance_type: mac_mini_m2
     environment:
       vars:
-        XCODE_PROJECT: "FilmsCollection.xcodeproj"
-        XCODE_SCHEME: "FilmsCollection"
+        XCODE_PROJECT: "HotNote.xcodeproj"
+        XCODE_SCHEME: "HotNote"
         BUNDLE_ID: "com.PhlpJiseph.Films"
         APP_STORE_APPLE_ID: "123456789" # ЗАМЕНИТЕ на реальный ID
         APP_STORE_CONNECT_ISSUER_ID: "76f522ce-5da9-4149-b26e-3ae60fc2a824"
