@@ -3,7 +3,7 @@ workflows:
     name: iOS Release
     environment:
       groups:
-        - app_store_credentials
+        - new
       vars:
         XCODE_PROJECT: "HotNote.xcodeproj"
         XCODE_SCHEME: "HotNote"
@@ -28,17 +28,11 @@ workflows:
           
           xcode-project use-profiles
           
-      - name: Install pods
-        script: |
-          cd "$CM_BUILD_DIR"
-          pod install
-          
       - name: Build and archive
         script: |
           xcode-project build-ipa \
             --project "$XCODE_PROJECT" \
-            --scheme "$XCODE_SCHEME" \
-            --workspace "${XCODE_PROJECT%.xcodeproj}.xcworkspace"
+            --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
       - /tmp/xcodebuild_logs/*.log
@@ -49,18 +43,9 @@ workflows:
         
         # Настройки публикации
         submit_to_app_store: true
-        beta_groups: 
-          - "Testers"
         
-        # Информация о приложении
-        app_id: $APP_STORE_APPLE_ID
-        bundle_id: $BUNDLE_ID
-        
-        # Настройки билда
-        release_type: SAME_AS_VERSION
-        
-        # Email уведомления
-        notify_external_testers: true
+        # Идентификатор приложения в App Store Connect
+        application_id: $APP_STORE_APPLE_ID
 
 # Настройки триггеров
 triggering:
@@ -79,4 +64,3 @@ triggering:
 # Настройки окружения
 environment:
   xcode: 15.0 # Укажите нужную версию Xcode
-  cocoapods: default
