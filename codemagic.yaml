@@ -1,74 +1,38 @@
-
 workflows:
-  ios-release-workflow:
-    name: iOS Release to TestFlight
+  ios-hotnote-release:
+    name: HotNote iOS Release
+    max_build_duration: 120
     instance_type: mac_mini_m2
     environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: "com.PhlpJiseph.HotNote"
       vars:
-        XCODE_PROJECT: "HotNote.xcodeproj" # ⚠️ ИЗМЕНИТЬ на HotNote
-        XCODE_SCHEME: "HotNote" # ⚠️ ИЗМЕНИТЬ на HotNote
-        BUNDLE_ID: "com.PhlpJiseph.HotNote" # ⚠️ ИЗМЕНИТЬ Bundle ID
-        APP_STORE_APPLE_ID: "123456789" # ЗАМЕНИТЕ на Apple ID приложения
+        XCODE_PROJECT: "HotNote.xcodeproj"
+        XCODE_SCHEME: "HotNote"
+        BUNDLE_ID: "com.PhlpJiseph.Films"
+        APP_STORE_APPLE_ID: "123456789"
         APP_STORE_CONNECT_ISSUER_ID: "76f522ce-5da9-4149-b26e-3ae60fc2a824"
         APP_STORE_CONNECT_KEY_ID: "WBP2ND8WH6"
         APP_STORE_CONNECT_PRIVATE_KEY: "-----BEGIN PRIVATE KEY-----MIGTAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBHkwdwIBAQQgK1Cgd7kcYlr03SDggSIdf++kFAk0GS67WNiVutpT3h6gCgYIKoZIzj0DAQehRANCAAS+QTxZxRTRFdg6XpqYdgBbQXKAWNg+LrEIN+lyfc92v57Gntj8yY6gfucGjHwA7+A3iTwgGdE5tMpaJuqhiQWD-----END PRIVATE KEY-----"
-        TEAM_ID: "Y4JKCJ5SG3" # ЗАМЕНИТЕ на ваш Team ID
+        TEAM_ID: "Y4JKCJ5SG3"
       xcode: latest
-    triggering:
-      events:
-        - push
-      branch_patterns:
-        - pattern: 'release'
-          include: true
-          source: true
+      cocoapods: default
     scripts:
-      - name: Setup manual code signing
-        script: |
-          # Устанавливаем правильный Bundle ID
-          /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier $BUNDLE_ID" "HotNote/Info.plist"
-          
-          # Создаем exportOptions.plist
-          cat > exportOptions.plist << EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-              <key>method</key>
-              <string>app-store</string>
-              <key>teamID</key>
-              <string>$TEAM_ID</string>
-              <key>uploadBitcode</key>
-              <false/>
-              <key>uploadSymbols</key>
-              <true/>
-          </dict>
-          </plist>
-          EOF
-
-      - name: Build and archive with auto signing
-        script: |
-          # Пробуем автоматическую подпись через Codemagic
-          xcode-project use-profiles
-          
-          # Создаем архив
-          xcodebuild archive \
-            -project "$XCODE_PROJECT" \
-            -scheme "$XCODE_SCHEME" \
-            -archivePath build/ios/xcarchive/HotNote.xcarchive \
-            -configuration Release \
-            -allowProvisioningUpdates
-
-      - name: Export IPA
-        script: |
-          # Экспортируем IPA
-          xcodebuild -exportArchive \
-            -archivePath build/ios/xcarchive/HotNote.xcarchive \
-            -exportOptionsPlist exportOptions.plist \
-            -exportPath build/ios/ipa \
-            -allowProvisioningUpdates
-
+      - name: Set up provisioning profiles
+        script: xcode-project use-profiles
+      - name: Increment build number
+        script: | 
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-testflight-build-number "$APP_STORE_APPLE_ID" || echo 0)
+          agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
+      - name: Build ipa for distribution
+        script: | 
+          xcode-project build-ipa \
+            --project "$XCODE_PROJECT" \
+            --scheme "$XCODE_SCHEME"
     artifacts:
       - build/ios/ipa/*.ipa
+      - $HOME/Library/Developer/Xcode/DerivedData/**/Build/**/*.dSYM
     publishing:
       app_store_connect:
         api_key: $APP_STORE_CONNECT_PRIVATE_KEY
@@ -76,10 +40,14 @@ workflows:
         issuer_id: $APP_STORE_CONNECT_ISSUER_ID
         submit_to_testflight: true
         expire_build_submitted_for_review: false
+        # Раскомментируйте и добавьте названия бета-групп при необходимости
+        # beta_groups:
+        #   - "Internal Testers"
+        #   - "External Testers"
         submit_to_app_store: false
       email:
         recipients:
-          - your-email@example.com
+          - your-email@example.com # ЗАМЕНИТЕ на ваш email
         notify:
           success: true
           failure: true
